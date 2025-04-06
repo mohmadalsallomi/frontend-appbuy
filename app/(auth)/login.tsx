@@ -1,34 +1,34 @@
-import React from 'react';
-import { View, Text, TextInput, StyleSheet } from 'react-native';
-import { Button, HelperText } from 'react-native-paper';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
+import { TextInput, Button, HelperText } from 'react-native-paper';
 import { Formik, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
-import { useRouter } from 'expo-router';
-import useAuth from '../../context/auth';
+import { Ionicons } from '@expo/vector-icons';
 
 interface LoginFormValues {
   email: string;
   password: string;
 }
 
-export default function Login() {
-  const router = useRouter();
-  const { login } = useAuth();
+const Login: React.FC = () => {
+  const [passwordVisible, setPasswordVisible] = useState(false);
 
   const validationSchema = Yup.object({
-    email: Yup.string().email('Invalid email address').required('Email is required'),
-    password: Yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
+    email: Yup.string().email('Invalid email').required('Email is required'),
+    password: Yup.string().min(6, 'Password must be at least 6 characters').required('Password is required')
   });
 
   const handleSubmit = (values: LoginFormValues, actions: FormikHelpers<LoginFormValues>) => {
-    login(values.email, values.password);  // Use login function from context
+    console.log(values);
     actions.setSubmitting(false);
-    router.push('/home');  // Navigate to the dashboard after successful login
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
+    <View style={{ flex: 1, justifyContent: 'center', padding: 20, backgroundColor: '#fff' }}>
+      <Text style={{ textAlign: 'center', fontSize: 24, fontWeight: 'bold', marginBottom: 20 }}>
+        مرحبًا بعودتك!
+      </Text>
+
       <Formik
         initialValues={{ email: '', password: '' }}
         validationSchema={validationSchema}
@@ -37,75 +37,63 @@ export default function Login() {
         {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
           <>
             <TextInput
-              style={styles.input}
-              placeholder="Email"
-              placeholderTextColor="#888"
+              label="الاسم او البريد الإلكتروني"
+              mode="outlined"
               value={values.email}
               onChangeText={handleChange('email')}
               onBlur={handleBlur('email')}
+              error={!!(touched.email && errors.email)}
+              style={{ marginBottom: 10 }}
+              keyboardType="email-address"
             />
             <HelperText type="error" visible={!!(touched.email && errors.email)}>
               {errors.email}
             </HelperText>
 
-            <TextInput
-              style={styles.input}
-              placeholder="Password"
-              placeholderTextColor="#888"
-              secureTextEntry
-              value={values.password}
-              onChangeText={handleChange('password')}
-              onBlur={handleBlur('password')}
-            />
+            <View style={{ position: 'relative' }}>
+              <TextInput
+                label="الرقم السري"
+                mode="outlined"
+                value={values.password}
+                onChangeText={handleChange('password')}
+                onBlur={handleBlur('password')}
+                error={!!(touched.password && errors.password)}
+                style={{ marginBottom: 10 }}
+                secureTextEntry={!passwordVisible}
+              />
+              <TouchableOpacity
+                style={{
+                  position: 'absolute',
+                  right: 10,
+                  top: 15,
+                }}
+                onPress={() => setPasswordVisible(!passwordVisible)}
+              >
+                <Ionicons name={passwordVisible ? 'eye-off' : 'eye'} size={24} color="gray" />
+              </TouchableOpacity>
+            </View>
             <HelperText type="error" visible={!!(touched.password && errors.password)}>
               {errors.password}
             </HelperText>
 
+            <TouchableOpacity onPress={() => console.log('Redirect to reset password')}>
+              <Text style={{ textAlign: 'right', color: '#007BFF', marginBottom: 20 }}>
+                هل نسيت كلمة السر؟
+              </Text>
+            </TouchableOpacity>
+
             <Button
               mode="contained"
-              onPress={() => handleSubmit()}  // No need to pass event here
-              style={styles.button}
+              onPress={() => handleSubmit()}
+              style={{ backgroundColor: '#2EA7BA', marginBottom: 20 }}
             >
-              Login
+              تسجيل الدخول
             </Button>
           </>
         )}
       </Formik>
     </View>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f7f7f7',
-    padding: 20,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: 30,
-    color: '#333',
-  },
-  input: {
-    width: '100%',
-    height: 50,
-    borderRadius: 8,
-    backgroundColor: '#fff',
-    marginBottom: 15,
-    paddingLeft: 15,
-    fontSize: 16,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 2,
-  },
-  button: {
-    width: '100%',
-    padding: 15,
-    backgroundColor: '#6200ea',
-    borderRadius: 8,
-  },
-});
+export default Login;

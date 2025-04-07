@@ -1,14 +1,55 @@
-import { Link, useRouter } from "expo-router";
-import { View, Text } from "react-native";
-import { Button } from "react-native-paper";
+import AdList from '@/components/ui/AdList';
+import CategoryTabs from '@/components/ui/CategoryTabs';
+import CityDropdown from '@/components/ui/CityDropdown';
+import FilterButton from '@/components/ui/FilterButton';
+import Header from '@/components/ui/header';
+import FilterModal from '@/components/ui/modals/FilterModal';
+import SearchBar from '@/components/ui/SearchBar';
+import { useNavigation } from 'expo-router';
+import { useState } from 'react';
+import { View, ScrollView, StatusBar, Button, Text } from 'react-native';
 
-export default function HomeScreen() {
-  const router=useRouter();
+
+export default function Home() {
+  const [selectedCity, setSelectedCity] = useState('');
+  const cities = ['New York', 'Los Angeles', 'Chicago', 'Houston', 'Phoenix'];
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [appliedFilters, setAppliedFilters] = useState({});
+  const navigation = useNavigation();
+
+  const toggleFilterModal = () => {
+    setModalVisible(!modalVisible);
+  };
+
+  const applyFilters = (filters) => {
+    setAppliedFilters(filters);
+    // Handle the applied filters here (e.g., update your ads based on the filters)
+    console.log(filters);
+  };
   return (
-    <View className="flex-1 items-center justify-center bg-blue-500">
-      <Text className="text-white text-2xl font-bold">Home Screen</Text>
-      <Link href={"/"}></Link>
-      
+    <ScrollView className='bg-gray-100 mt-10'>
+      <Header />
+      <SearchBar />
+      <CategoryTabs />
+      <CityDropdown
+        selectedCity={selectedCity}
+        setSelectedCity={setSelectedCity}
+        cities={cities}
+      />
+       <View style={{ flex: 1, padding: 20 }}>
+       <FilterButton onPress={toggleFilterModal} />
+
+      <View>
+        <Text>Showing ads with the following filters:</Text>
+        <Text>Newest: {appliedFilters.newest ? 'Yes' : 'No'}</Text>
+        <Text>By Price: {appliedFilters.byPrice ? 'Yes' : 'No'}</Text>
+        {/* Render your ads here based on the filters */}
+      </View>
+
+      <FilterModal visible={modalVisible} onClose={toggleFilterModal} onApplyFilters={applyFilters} />
     </View>
+      <AdList />
+    </ScrollView>
   );
 }

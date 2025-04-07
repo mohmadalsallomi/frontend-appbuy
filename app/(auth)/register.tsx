@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { TextInput, Button, HelperText } from 'react-native-paper';
 import { Formik, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
@@ -20,7 +20,7 @@ const Register: React.FC = () => {
     password: Yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
     phoneNumber: Yup.string()
       .matches(/^[0-9]{10}$/, 'Phone number must be 10 digits')
-      .required('Phone number is required')
+      .required('Phone number is required'),
   });
 
   const handleSubmit = (values: SignupFormValues, actions: FormikHelpers<SignupFormValues>) => {
@@ -29,8 +29,8 @@ const Register: React.FC = () => {
   };
 
   return (
-    <View className="flex-1 justify-center px-5 bg-gray-100">
-      <Text className="text-center text-xl font-bold mb-5">Sign Up</Text>
+    <View style={styles.container}>
+      <Text style={styles.heading}>Sign Up</Text>
       <Formik
         initialValues={{ firstName: '', lastName: '', email: '', password: '', phoneNumber: '' }}
         validationSchema={validationSchema}
@@ -45,9 +45,11 @@ const Register: React.FC = () => {
               onChangeText={handleChange('firstName')}
               onBlur={handleBlur('firstName')}
               error={!!(touched.firstName && errors.firstName)}
-              className="mb-2"
+              style={styles.input}
             />
-            <HelperText type="error" visible={!!(touched.firstName && errors.firstName)}>{errors.firstName}</HelperText>
+            <HelperText type="error" visible={!!(touched.firstName && errors.firstName)}>
+              {errors.firstName}
+            </HelperText>
 
             <TextInput
               label="Last Name"
@@ -56,9 +58,11 @@ const Register: React.FC = () => {
               onChangeText={handleChange('lastName')}
               onBlur={handleBlur('lastName')}
               error={!!(touched.lastName && errors.lastName)}
-              className="mb-2"
+              style={styles.input}
             />
-            <HelperText type="error" visible={!!(touched.lastName && errors.lastName)}>{errors.lastName}</HelperText>
+            <HelperText type="error" visible={!!(touched.lastName && errors.lastName)}>
+              {errors.lastName}
+            </HelperText>
 
             <TextInput
               label="Email"
@@ -67,10 +71,12 @@ const Register: React.FC = () => {
               onChangeText={handleChange('email')}
               onBlur={handleBlur('email')}
               error={!!(touched.email && errors.email)}
-              className="mb-2"
+              style={styles.input}
               keyboardType="email-address"
             />
-            <HelperText type="error" visible={!!(touched.email && errors.email)}>{errors.email}</HelperText>
+            <HelperText type="error" visible={!!(touched.email && errors.email)}>
+              {errors.email}
+            </HelperText>
 
             <TextInput
               label="Password"
@@ -79,10 +85,12 @@ const Register: React.FC = () => {
               onChangeText={handleChange('password')}
               onBlur={handleBlur('password')}
               error={!!(touched.password && errors.password)}
-              className="mb-2"
+              style={styles.input}
               secureTextEntry
             />
-            <HelperText type="error" visible={!!(touched.password && errors.password)}>{errors.password}</HelperText>
+            <HelperText type="error" visible={!!(touched.password && errors.password)}>
+              {errors.password}
+            </HelperText>
 
             <TextInput
               label="Phone Number"
@@ -91,12 +99,14 @@ const Register: React.FC = () => {
               onChangeText={handleChange('phoneNumber')}
               onBlur={handleBlur('phoneNumber')}
               error={!!(touched.phoneNumber && errors.phoneNumber)}
-              className="mb-2"
+              style={styles.input}
               keyboardType="phone-pad"
             />
-            <HelperText type="error" visible={!!(touched.phoneNumber && errors.phoneNumber)}>{errors.phoneNumber}</HelperText>
+            <HelperText type="error" visible={!!(touched.phoneNumber && errors.phoneNumber)}>
+              {errors.phoneNumber}
+            </HelperText>
 
-            <Button mode="contained" onPress={handleSubmit} className="mt-3 bg-red-300b">
+            <Button mode="contained" onPress={handleSubmit} style={styles.button}>
               Sign Up
             </Button>
           </>
@@ -105,5 +115,28 @@ const Register: React.FC = () => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+    backgroundColor: '#F3F4F6', // gray-100
+  },
+  heading: {
+    fontSize: 24, // text-xl
+    fontWeight: 'bold', // font-bold
+    textAlign: 'center',
+    marginBottom: 20, // mb-5
+    color: '#1F2937', // text-gray-800
+  },
+  input: {
+    marginBottom: 10, // mb-2
+  },
+  button: {
+    marginTop: 15, // mt-3
+    backgroundColor: '#F87171', // bg-red-300
+  },
+});
 
 export default Register;

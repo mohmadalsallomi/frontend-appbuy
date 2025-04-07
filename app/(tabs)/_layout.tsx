@@ -9,6 +9,7 @@ import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import Icon from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { AntDesign } from "@expo/vector-icons";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -52,9 +53,9 @@ export default function TabLayout() {
       <Tabs.Screen
         name="ads"
         options={{
-          title: "ads",
+          title: "Create an ad",
           tabBarIcon: ({ color }) => (
-            <FontAwesome name="hacker-news" size={18} color={color} />
+            <AntDesign name="pluscircle" size={28} color={color} />
           ),
         }}
       />

@@ -43,8 +43,8 @@ export default function Home() {
       <View>
         <Text>Showing ads with the following filters:</Text>
         <Text>Newest: {appliedFilters.newest ? 'Yes' : 'No'}</Text>
-        <Text>By Price: {appliedFilters.byPrice ? 'Yes' : 'No'}</Text>
-        {/* Render your ads here based on the filters */}
+        <Text>By Price: {appliedFilters.byPrice ? 'Yes' : 'No'}</Text> 
+      
       </View>
 
       <FilterModal visible={modalVisible} onClose={toggleFilterModal} onApplyFilters={applyFilters} />

@@ -1,8 +1,15 @@
-import { View, Text, Image } from 'react-native';
+import { useRouter } from 'expo-router';
+import { View, Text, Image, Pressable } from 'react-native';
 
 export default function AdCard({ ad }:any) {
+
+  const router = useRouter();
+
+  const handlePress = () => {
+    router.push(`/ads/${ad.id}`);
+  };
   return (
-    <View style={{
+    <Pressable onPress={handlePress}  style={{
       flexDirection: 'row',
       marginBottom: 16,
       backgroundColor: '#fff',
@@ -16,6 +23,6 @@ export default function AdCard({ ad }:any) {
         <Text>{ad.price}</Text>
         <Text style={{ color: '#666' }}>{ad.location}</Text>
       </View>
-    </View>
+    </Pressable >
   );
 }

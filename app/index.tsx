@@ -50,7 +50,7 @@ const App = () => {
       {/* Skip button */}
       <Button
         mode="text"
-        onPress={() => router.push('/home')}
+        onPress={() => router.push('/(tabs)/(home)')}
         style={{
       
           padding: 10,

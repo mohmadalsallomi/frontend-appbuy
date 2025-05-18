@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { TextInput, Button, HelperText } from 'react-native-paper';
 import { Formik, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router'; // استيراد useRouter
 
 interface LoginFormValues {
   email: string;
@@ -12,6 +13,7 @@ interface LoginFormValues {
 
 const Login: React.FC = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const router = useRouter(); // استخدم useRouter للتوجيه إلى صفحة إعادة تعيين كلمة السر
 
   const validationSchema = Yup.object({
     email: Yup.string().email('Invalid email').required('Email is required'),
@@ -21,13 +23,13 @@ const Login: React.FC = () => {
   const handleSubmit = (values: LoginFormValues, actions: FormikHelpers<LoginFormValues>) => {
     console.log(values);
     actions.setSubmitting(false);
+    // توجيه المستخدم إلى الصفحة الرئيسية بعد تسجيل الدخول
+    router.push('/home');
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', padding: 20, backgroundColor: '#fff' }}>
-      <Text style={{ textAlign: 'center', fontSize: 24, fontWeight: 'bold', marginBottom: 20 }}>
-        مرحبًا بعودتك!
-      </Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>مرحبًا بعودتك!</Text>
 
       <Formik
         initialValues={{ email: '', password: '' }}
@@ -43,14 +45,14 @@ const Login: React.FC = () => {
               onChangeText={handleChange('email')}
               onBlur={handleBlur('email')}
               error={!!(touched.email && errors.email)}
-              style={{ marginBottom: 10 }}
+              style={styles.input}
               keyboardType="email-address"
             />
             <HelperText type="error" visible={!!(touched.email && errors.email)}>
               {errors.email}
             </HelperText>
 
-            <View style={{ position: 'relative' }}>
+            <View style={styles.passwordInputContainer}>
               <TextInput
                 label="الرقم السري"
                 mode="outlined"
@@ -58,15 +60,11 @@ const Login: React.FC = () => {
                 onChangeText={handleChange('password')}
                 onBlur={handleBlur('password')}
                 error={!!(touched.password && errors.password)}
-                style={{ marginBottom: 10 }}
+                style={styles.input}
                 secureTextEntry={!passwordVisible}
               />
               <TouchableOpacity
-                style={{
-                  position: 'absolute',
-                  right: 10,
-                  top: 15,
-                }}
+                style={styles.passwordToggle}
                 onPress={() => setPasswordVisible(!passwordVisible)}
               >
                 <Ionicons name={passwordVisible ? 'eye-off' : 'eye'} size={24} color="gray" />
@@ -76,8 +74,8 @@ const Login: React.FC = () => {
               {errors.password}
             </HelperText>
 
-            <TouchableOpacity onPress={() => console.log('Redirect to reset password')}>
-              <Text style={{ textAlign: 'right', color: '#007BFF', marginBottom: 20 }}>
+            <TouchableOpacity onPress={() => router.push('/forgot-password')}>
+              <Text style={styles.forgotPasswordText}>
                 هل نسيت كلمة السر؟
               </Text>
             </TouchableOpacity>
@@ -85,7 +83,7 @@ const Login: React.FC = () => {
             <Button
               mode="contained"
               onPress={() => handleSubmit()}
-              style={{ backgroundColor: '#2EA7BA', marginBottom: 20 }}
+              style={styles.loginButton}
             >
               تسجيل الدخول
             </Button>
@@ -95,5 +93,41 @@ const Login: React.FC = () => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 20,
+    backgroundColor: '#fff',
+  },
+  title: {
+    textAlign: 'center',
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    color: '#333',
+  },
+  input: {
+    marginBottom: 10,
+  },
+  passwordInputContainer: {
+    position: 'relative',
+  },
+  passwordToggle: {
+    position: 'absolute',
+    right: 10,
+    top: 15,
+  },
+  forgotPasswordText: {
+    textAlign: 'right',
+    color: '#007BFF',
+    marginBottom: 20,
+  },
+  loginButton: {
+    backgroundColor: '#2EA7BA',
+    marginBottom: 20,
+  },
+});
 
 export default Login;

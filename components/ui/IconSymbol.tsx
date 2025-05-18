@@ -1,31 +1,27 @@
-// This file is a fallback for using MaterialIcons on Android and web.
-
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import { SymbolWeight } from 'expo-symbols';
 import React from 'react';
-import { OpaqueColorValue, StyleProp, ViewStyle } from 'react-native';
+import { OpaqueColorValue, StyleProp, TextStyle } from 'react-native';
 
-// Add your SFSymbol to MaterialIcons mappings here.
+// خريطة بين أيقونات SF Symbols و Material Icons
 const MAPPING = {
-  // See MaterialIcons here: https://icons.expo.fyi
-  // See SF Symbols in the SF Symbols app on Mac.
   'house.fill': 'home',
   'paperplane.fill': 'send',
   'chevron.left.forwardslash.chevron.right': 'code',
   'chevron.right': 'chevron-right',
-} as Partial<
-  Record<
-    import('expo-symbols').SymbolViewProps['name'],
+  'heart.fill': 'favorite',
+  'star.fill': 'star',
+} as Partial< 
+  Record< 
+    import('expo-symbols').SymbolViewProps['name'], 
     React.ComponentProps<typeof MaterialIcons>['name']
-  >
+  > 
 >;
 
 export type IconSymbolName = keyof typeof MAPPING;
 
 /**
- * An icon component that uses native SFSymbols on iOS, and MaterialIcons on Android and web. This ensures a consistent look across platforms, and optimal resource usage.
- *
- * Icon `name`s are based on SFSymbols and require manual mapping to MaterialIcons.
+ * مكون أيقونة يستخدم SF Symbols على iOS و MaterialIcons على Android و Web.
+ * هذا يضمن مظهراً متسقاً عبر الأنظمة المختلفة.
  */
 export function IconSymbol({
   name,
@@ -36,8 +32,18 @@ export function IconSymbol({
   name: IconSymbolName;
   size?: number;
   color: string | OpaqueColorValue;
-  style?: StyleProp<ViewStyle>;
-  weight?: SymbolWeight;
+  style?: StyleProp<TextStyle>;
 }) {
-  return <MaterialIcons color={color} size={size} name={MAPPING[name]} style={style} />;
+  // فحص ما إذا كان الاسم مرفقًا في الـ MAPPING وإذا كان صحيحًا
+  const iconName = MAPPING[name];
+
+  if (!iconName) {
+    console.warn('Icon name not found in MAPPING:', name); // طباعة تحذير في حالة عدم العثور على الأيقونة في MAPPING
+  }
+
+  return iconName ? (
+    <MaterialIcons color={color} size={size} name={iconName} style={style} />
+  ) : (
+    <MaterialIcons color={color} size={size} name="help-outline" style={style} /> // عرض أيقونة بديلة في حالة الخطأ
+  );
 }

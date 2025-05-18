@@ -1,6 +1,7 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
+import { useNavigation } from '@react-navigation/native';  // استيراد hook للتنقل
 import { Stack } from 'expo-router';
+import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
@@ -30,9 +31,28 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
+        {/* صفحة التبويبات */}
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
+
+        {/* صفحة تسجيل الدخول */}
+        <Stack.Screen name="login" options={{ headerShown: false }} />
+
+        {/* صفحة مميزات وخدمات */}
+        <Stack.Screen name="features-services" options={{ title: "مميزات و خدمات" }} />
+
+        {/* صفحة اتصل بنا */}
+        <Stack.Screen name="contact-us" options={{ title: "اتصل بنا" }} />
+
+        {/* صفحة سياسة التطبيق */}
+        <Stack.Screen name="privacy-policy" options={{ title: "سياسة التطبيق" }} />
+
+        {/* صفحة مركز الادمان */}
+        <Stack.Screen name="addiction-center" options={{ title: "مركز الادمان" }} />
+
+        {/* صفحة الخطأ إذا تم الوصول إلى مسار غير موجود */}
+        <Stack.Screen name="+not-found" options={{ title: "Page Not Found" }} />
+
+        {/* الصفحة الرئيسية */}
         <Stack.Screen name="index" options={{ headerShown: false }} />
       </Stack>
       <StatusBar style="auto" />

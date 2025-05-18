@@ -1,16 +1,20 @@
 import React, { useState } from 'react';
 import { View, Text, Button, Modal, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import { Checkbox } from 'react-native-paper';
 
-const FilterModal = ({ visible, onClose, onApplyFilters }) => {
+interface FilterModalProps {
+  visible: boolean;
+  onClose: () => void;
+  onApplyFilters: (filters: { newest: boolean; byPrice: boolean }) => void;
+}
+
+const FilterModal: React.FC<FilterModalProps> = ({ visible, onClose, onApplyFilters }) => {
   const [filters, setFilters] = useState({
     newest: false,
     byPrice: false,
-    // Add other filters here
   });
 
-  const handleFilterChange = (filterName) => {
+  const handleFilterChange = (filterName: keyof typeof filters) => {
     setFilters((prevFilters) => ({
       ...prevFilters,
       [filterName]: !prevFilters[filterName],
@@ -20,6 +24,13 @@ const FilterModal = ({ visible, onClose, onApplyFilters }) => {
   const handleApply = () => {
     onApplyFilters(filters);
     onClose();
+  };
+
+  const [isFilterApplied, setIsFilterApplied] = useState(false);  // حالة للتأكد إذا كانت الفلاتر مفعلة
+
+  const handleFilterApplied = (filters: { newest: boolean; byPrice: boolean }) => {
+    setIsFilterApplied(filters.newest || filters.byPrice);  // تحقق من الفلاتر إذا كانت مفعلة
+    onApplyFilters(filters);
   };
 
   return (
@@ -35,17 +46,17 @@ const FilterModal = ({ visible, onClose, onApplyFilters }) => {
           
           <View>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Checkbox value={filters.newest} onValueChange={() => handleFilterChange('newest')} />
+              <Checkbox status={filters.newest ? 'checked' : 'unchecked'} onPress={() => handleFilterChange('newest')} />
               <Text>Newest</Text>
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Checkbox value={filters.byPrice} onValueChange={() => handleFilterChange('byPrice')} />
+              <Checkbox status={filters.byPrice ? 'checked' : 'unchecked'} onPress={() => handleFilterChange('byPrice')} />
               <Text>By Price</Text>
             </View>
-            {/* Add more filters as needed */}
           </View>
-          
-          <TouchableOpacity onPress={handleApply} style={{ marginTop: 20, backgroundColor: '#007bff', padding: 10, alignItems: 'center' }}>
+
+
+          <TouchableOpacity onPress={() => handleFilterApplied(filters)} style={{ marginTop: 20, backgroundColor: '#007bff', padding: 10, alignItems: 'center' }}>
             <Text style={{ color: 'white' }}>Apply Filters</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={onClose} style={{ marginTop: 10, alignItems: 'center' }}>
